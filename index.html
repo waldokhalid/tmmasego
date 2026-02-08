@@ -1,0 +1,1337 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T.M Masego</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300;0,400;0,500;0,700;0,900;1,300&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"></script>
+
+    <style>
+        /* --- VARIABLES & RESET --- */
+        :root {
+            --primary-text: #112A46;
+            --background-color: #6ac5fe;
+            --primary-accent: #1672ce;
+            --btn-gradient-start: #1672ce;
+            --btn-gradient-end: #0d5ba9;
+            --btn-hover-start: #1aa2ff;
+            --white: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html,
+        body {
+            height: 100%;
+            width: 100%;
+        }
+
+        body {
+            font-family: 'Rubik', sans-serif;
+            background-color: var(--background-color);
+            color: var(--primary-text);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            /* Allow body to be visible, we control elements individually */
+            visibility: visible;
+            opacity: 1;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        img {
+            display: block;
+            max-width: 100%;
+        }
+
+        /* --- PRELOADER --- */
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--background-color);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loader-text {
+            font-size: 56px;
+            font-weight: 800;
+            color: var(--primary-text);
+            letter-spacing: 1.2px;
+            margin-bottom: 18px;
+            opacity: 1;
+            /* Start visible for the first word */
+        }
+
+        .loader-spinner {
+            width: 36px;
+            height: 36px;
+            border: 3px solid rgba(22, 114, 206, 0.2);
+            border-top: 3px solid var(--primary-accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* --- NAVIGATION --- */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: 60px;
+            background-color: var(--background-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            transform: translateY(-100%);
+            /* Hidden initially */
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .logo-img {
+            height: 40px;
+            border-radius: 16px;
+            margin-right: 10px;
+        }
+
+        .logo-text {
+            font-weight: bold;
+            font-size: 20px;
+            color: var(--primary-text);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-btn {
+            background: none;
+            border: none;
+            font-family: 'Rubik', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--primary-text);
+            cursor: pointer;
+            text-transform: uppercase;
+            position: relative;
+        }
+
+        .nav-btn::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: var(--primary-accent);
+            transition: width 0.3s ease;
+        }
+
+        .nav-btn:hover::after {
+            width: 100%;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--primary-text);
+            cursor: pointer;
+        }
+
+        /* --- MOBILE DRAWER --- */
+        .mobile-drawer {
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 80%;
+            max-width: 300px;
+            height: 100%;
+            background-color: #000;
+            z-index: 2000;
+            transition: left 0.3s ease;
+            padding-top: 20px;
+        }
+
+        .mobile-drawer.open {
+            left: 0;
+        }
+
+        .drawer-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1999;
+            display: none;
+        }
+
+        .drawer-overlay.open {
+            display: block;
+        }
+
+        .drawer-header {
+            padding: 10px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+        }
+
+        .drawer-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 22px 20px;
+            color: white;
+            font-size: 18px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.24);
+            cursor: pointer;
+        }
+
+        /* --- CINEMATIC PARALLAX SECTIONS --- */
+        .parallax-section {
+            position: relative;
+            height: 100vh;
+            width: 100%;
+            overflow: hidden;
+            /* Crucial for clipping */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* FIXED PARALLAX BG:
+           Height 120% + Top -10% ensures we have overlap at top and bottom.
+           When we scroll, we move it slightly within this buffer so no white space shows.
+        */
+        .parallax-bg {
+            position: absolute;
+            top: -10%;
+            left: 0;
+            width: 100%;
+            height: 120%;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: 1;
+            will-change: transform;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.35);
+            z-index: 2;
+        }
+
+        .slogan-overlay {
+            background-color: rgba(0, 0, 0, 0.3);
+        }
+
+        .content-box {
+            position: relative;
+            z-index: 3;
+            text-align: center;
+            padding: 20px;
+            max-width: 900px;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .hero-title {
+            font-size: 50px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.87);
+        }
+
+        .section-title {
+            color: white;
+            font-size: 70px;
+            font-weight: 900;
+            letter-spacing: -1.5px;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.87);
+            margin-bottom: 20px;
+        }
+
+        .section-desc {
+            font-size: 18px;
+            font-weight: 300;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.95);
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.87);
+            margin-bottom: 30px;
+            white-space: pre-wrap;
+        }
+
+        /* --- MODERN BUTTON --- */
+        .modern-btn {
+            display: inline-block;
+            padding: 16px 32px;
+            border-radius: 30px;
+            background: linear-gradient(to right, var(--btn-gradient-start), var(--btn-gradient-end));
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+            letter-spacing: 0.5px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        /* --- ABOUT SECTION --- */
+        .about-section {
+            padding: 60px 20px;
+            background-color: var(--background-color);
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .gsap-reveal {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .about-title {
+            font-size: 40px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .about-text {
+            font-size: 18px;
+            color: rgba(17, 42, 70, 0.8);
+            max-width: 800px;
+            margin: 0 auto 40px auto;
+            line-height: 1.5;
+        }
+
+        .founders-wrap {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .founder-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .founder-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .founder-name {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .info-card {
+            max-width: 800px;
+            margin: 0 auto 20px auto;
+        }
+
+        .info-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary-text);
+            margin-bottom: 10px;
+        }
+
+        .info-text {
+            font-size: 16px;
+            color: rgba(17, 42, 70, 0.8);
+        }
+
+        /* --- CONTACT & PARTNERS --- */
+        .partners-section {
+            padding: 50px 0;
+            background-color: var(--background-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .partner-img {
+            height: 80px;
+            border-radius: 12px;
+            margin: 15px;
+            object-fit: contain;
+            display: block;
+        }
+
+        .contact-section {
+            padding: 80px 20px;
+            background-color: var(--background-color);
+            text-align: center;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            font-size: 20px;
+            color: var(--primary-text);
+            cursor: pointer;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .contact-item i {
+            margin-right: 15px;
+        }
+
+        .social-wrap {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .social-icon {
+            width: 48px;
+            height: 48px;
+            background-color: var(--primary-text);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            opacity: 0;
+            transform: scale(0.5);
+        }
+
+        /* --- DETAILS PAGE OVERLAY --- */
+        .details-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--background-color);
+            z-index: 3000;
+            overflow-y: auto;
+            transform: translateY(100%);
+            padding-bottom: 50px;
+            display: none;
+        }
+
+        .details-appbar {
+            position: sticky;
+            top: 0;
+            background-color: var(--background-color);
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            z-index: 10;
+        }
+
+        .back-btn {
+            position: absolute;
+            left: 20px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--primary-text);
+            cursor: pointer;
+        }
+
+        .details-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--primary-text);
+        }
+
+        .details-content {
+            padding: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .detail-anim-item {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .gallery-item {
+            aspect-ratio: 1;
+            overflow: hidden;
+            border-radius: 8px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+
+        .rotate-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 50%;
+            padding: 4px;
+            color: white;
+            display: none;
+            z-index: 2;
+        }
+
+        .gallery-item:hover .rotate-btn {
+            display: block;
+        }
+
+        .chip-wrap {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .chip {
+            background-color: #e0e0e0;
+            padding: 8px 16px;
+            border-radius: 16px;
+            font-size: 14px;
+            color: rgba(0, 0, 0, 0.87);
+        }
+
+        /* Lightbox */
+        .lightbox {
+            display: none;
+            position: fixed;
+            z-index: 4000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+        }
+
+        .lightbox img {
+            max-width: 90%;
+            max-height: 90%;
+            transition: transform 0.3s;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 40px;
+            cursor: pointer;
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 850px) {
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .section-title {
+                font-size: 50px;
+            }
+
+            .hero-title {
+                font-size: 36px;
+            }
+
+            .gallery-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="preloader">
+        <div class="loader-text" id="loaderText">Luxury</div>
+        <div class="loader-spinner"></div>
+    </div>
+
+    <header>
+        <div class="logo-container" onclick="scrollToSection('home')">
+            <img src="assets/logos/LOGO.jpg" alt="Logo" class="logo-img">
+            <span class="logo-text">T.M Masego</span>
+        </div>
+        <nav class="nav-links">
+            <button class="nav-btn" onclick="scrollToSection('about')">About</button>
+            <button class="nav-btn" onclick="scrollToSection('safari')">Safari</button>
+            <button class="nav-btn" onclick="scrollToSection('interior')">Interior</button>
+            <button class="nav-btn" onclick="scrollToSection('coffee')">Coffee</button>
+            <button class="nav-btn" onclick="scrollToSection('contact')">Contact</button>
+        </nav>
+        <button class="mobile-menu-btn" onclick="toggleDrawer()"><i class="fas fa-bars"></i></button>
+    </header>
+
+    <div class="drawer-overlay" onclick="toggleDrawer()"></div>
+    <div class="mobile-drawer" id="mobileDrawer">
+        <div class="drawer-header">
+            <button onclick="toggleDrawer()" style="background:none; border:none; color:white; font-size:28px;"><i
+                    class="fas fa-arrow-left"></i></button>
+        </div>
+        <div class="drawer-item" onclick="drawerNavigate('home')"><span>Home</span><i class="fas fa-arrow-right"
+                style="font-size:14px; opacity:0.5;"></i></div>
+        <div class="drawer-item" onclick="drawerNavigate('about')"><span>About</span><i class="fas fa-arrow-right"
+                style="font-size:14px; opacity:0.5;"></i></div>
+        <div class="drawer-item" onclick="drawerNavigate('safari')"><span>Safari</span><i class="fas fa-arrow-right"
+                style="font-size:14px; opacity:0.5;"></i></div>
+        <div class="drawer-item" onclick="drawerNavigate('interior')"><span>Interior Design</span><i
+                class="fas fa-arrow-right" style="font-size:14px; opacity:0.5;"></i></div>
+        <div class="drawer-item" onclick="drawerNavigate('coffee')"><span>Coffee</span><i class="fas fa-arrow-right"
+                style="font-size:14px; opacity:0.5;"></i></div>
+        <div class="drawer-item" onclick="drawerNavigate('contact')"><span>Contact Us</span><i
+                class="fas fa-arrow-right" style="font-size:14px; opacity:0.5;"></i></div>
+    </div>
+
+    <section id="home" class="parallax-section">
+        <div class="parallax-bg" style="background-image: url('assets/tt/one.jpeg');"></div>
+        <div class="overlay slogan-overlay"></div>
+        <div class="content-box">
+            <h1 class="hero-title" id="typingSlogan"></h1>
+        </div>
+    </section>
+
+    <section id="about" class="about-section">
+        <h2 class="about-title gsap-reveal">About Us</h2>
+        <p class="about-text gsap-reveal">
+            T.M Masego Limited was founded in 2024 by Trizah and Mungai, driven by a shared passion for creativity,
+            quality, and excellence. The company was built with a vision to bring unique solutions and experiences to
+            clients across different industries.
+        </p>
+
+        <div class="founders-wrap">
+            <div class="founder-card gsap-reveal">
+                <img src="assets/fone.jpg" alt="Trizah Ocholla" class="founder-img">
+                <span class="founder-name">Trizah Ocholla</span>
+            </div>
+            <div class="founder-card gsap-reveal">
+                <img src="assets/ftwo.jpg" alt="Peter Mungai" class="founder-img">
+                <span class="founder-name">Peter Mungai</span>
+            </div>
+        </div>
+
+        <div class="info-card gsap-reveal">
+            <div class="info-title">Mission</div>
+            <p class="info-text">To create meaningful experiences by transforming spaces, unique safaris, and delivering
+                premium products that inspire comfort, connection, and excellence.</p>
+        </div>
+        <div class="info-card gsap-reveal">
+            <div class="info-title">Vision</div>
+            <p class="info-text">To be a trusted and innovative lifestyle brand in Africa and beyond redefining design,
+                travel, and coffee culture.</p>
+        </div>
+        <div class="info-card gsap-reveal">
+            <div class="info-title">Core Values</div>
+            <p class="info-text">Creativity, Innovation, Excellence, Perfection, Authenticity, Integrity and Customer
+                Centricity.</p>
+        </div>
+    </section>
+
+    <section id="safari" class="parallax-section">
+        <div class="parallax-bg" style="background-image: url('assets/tt/two.jpeg');"></div>
+        <div class="overlay"></div>
+        <div class="content-box">
+            <h2 class="section-title">Safari</h2>
+            <p class="section-desc">Embark on an unforgettable journey through the heart of Africa, where the wild roams
+                free.
+                Experience the thrill of encountering majestic wildlife.</p>
+            <button class="modern-btn" onclick="openPage('safariPage')">Explore Safaris</button>
+        </div>
+    </section>
+
+    <section id="interior" class="parallax-section">
+        <div class="parallax-bg" style="background-image: url('assets/is/commercial/one.jpeg');"></div>
+        <div class="overlay"></div>
+        <div class="content-box">
+            <h2 class="section-title">Interior Design</h2>
+            <p class="section-desc">Transform your living space into a sanctuary of style and comfort with our bespoke
+                interior design services.</p>
+            <button class="modern-btn" onclick="openPage('interiorPage')">View Designs</button>
+        </div>
+    </section>
+
+    <section id="coffee" class="parallax-section">
+        <div class="parallax-bg" style="background-image: url('assets/coffee/one.jpeg');"></div>
+        <div class="overlay"></div>
+        <div class="content-box">
+            <h2 class="section-title">Coffee</h2>
+            <p class="section-desc">Offering premium, high quality 100% Arabica coffee, dedicated to delivering rich
+                flavors.</p>
+            <button class="modern-btn" onclick="openPage('coffeePage')">Discover Our Coffee</button>
+        </div>
+    </section>
+
+    <section id="contact">
+        <div class="partners-section gsap-reveal">
+            <h3 style="font-size: 30px; font-weight: bold; margin-bottom: 30px;">Our Partners</h3>
+            <img src="assets/masego_partner.jpeg" alt="Partner" class="partner-img">
+        </div>
+
+        <div class="contact-section">
+            <h2 style="font-size: 50px; font-weight: 900; margin-bottom: 40px;" class="gsap-reveal">Contact Us</h2>
+
+            <a href="tel:+254745837219" class="contact-item">
+                <i class="fas fa-phone"></i> +254 745 837 219
+            </a>
+            <a href="mailto:Tmmasego@gmail.com" class="contact-item">
+                <i class="fas fa-envelope"></i> Tmmasego@gmail.com
+            </a>
+
+            <div class="social-wrap">
+                <a href="https://www.instagram.com/tm.masego?igsh=MXV6amFueGI1N2NqbQ==" target="_blank"
+                    class="social-icon" title="Instagram"><i class="fas fa-camera"></i></a>
+                <a href="https://www.linkedin.com/company/t-m-masego-limited/" target="_blank" class="social-icon"
+                    title="LinkedIn"><i class="fas fa-briefcase"></i></a>
+                <a href="https://www.tiktok.com/@tmmasegoltd?_t=ZM-8z0x7Ho8IiM&_r=1" target="_blank" class="social-icon"
+                    title="TikTok"><i class="fas fa-music"></i></a>
+                <a href="https://x.com/TMMasego?t=vUIdNY4wE3A4WuAqQdnYkA&s=09" target="_blank" class="social-icon"
+                    title="X (Twitter)"><i class="fas fa-times"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <div id="safariPage" class="details-page">
+        <div class="details-appbar">
+            <button class="back-btn" onclick="closePage('safariPage')"><i class="fas fa-arrow-left"></i></button>
+            <span class="details-title">The Safari Experience</span>
+        </div>
+        <div class="details-content">
+            <p class="detail-anim-item"
+                style="text-align: center; font-size: 18px; color: rgba(17, 42, 70, 0.8); margin-bottom: 30px;">
+                Creating unforgettable journeys that blend adventure, discovery, and relaxation. We take you to
+                breathtaking destinations across Kenya and beyond.
+            </p>
+
+            <h3 class="detail-anim-item" style="font-size: 30px; font-weight: bold; margin-bottom: 10px;">The Great
+                Migration</h3>
+            <p class="detail-anim-item"
+                style="font-size: 16px; color: rgba(17, 42, 70, 0.8); line-height: 1.5; margin-bottom: 20px;">
+                Witness one of nature's most spectacular events. Millions of wildebeest, zebra, and gazelle traverse the
+                Serengeti ecosystem in a continuous search for fresh grazing.
+            </p>
+
+            <div class="gallery-grid">
+                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
+                    <img src="assets/tt/three.jpeg">
+                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
+                </div>
+                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
+                    <img src="assets/tt/four.jpeg">
+                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
+                </div>
+                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
+                    <img src="assets/tt/five.jpeg">
+                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
+                </div>
+                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
+                    <img src="assets/tt/six.jpeg">
+                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
+                </div>
+                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
+                    <img src="assets/tt/seven.jpeg">
+                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
+                </div>
+                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
+                    <img src="assets/tt/eight.jpg">
+                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
+                </div>
+                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
+                    <img src="assets/tt/nine.jpeg">
+                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
+                </div>
+                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
+                    <img src="assets/tt/ten.jpeg">
+                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
+                </div>
+                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
+                    <img src="assets/tt/eleven.jpeg">
+                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
+                </div>
+                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
+                    <img src="assets/tt/twelve.jpg">
+                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
+                </div>
+                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
+                    <img src="assets/tt/thirteen.jpg">
+                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
+                </div>
+                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
+                    <img src="assets/tt/fourteen.jpg">
+                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
+                </div>
+                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
+                    <img src="assets/tt/fifteen.jpg">
+                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
+                </div>
+            </div>
+
+            <div style="margin-top: 30px;">
+                <h4 class="detail-anim-item" style="font-size: 24px; font-weight: bold; margin-bottom: 10px;">What it
+                    includes:</h4>
+                <div class="chip-wrap detail-anim-item">
+                    <span class="chip">Accommodation</span>
+                    <span class="chip">Transport & Transfers</span>
+                    <span class="chip">Park Fees & Entry Tickets</span>
+                    <span class="chip">Meals & Dining Experiences</span>
+                    <span class="chip">Guided Tours & Excursions</span>
+                    <span class="chip">Itinerary Planning</span>
+                    <span class="chip">Photography Moments</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="interiorPage" class="details-page">
+        <div class="details-appbar">
+            <button class="back-btn" onclick="closePage('interiorPage')"><i class="fas fa-arrow-left"></i></button>
+            <span class="details-title">Bespoke Interior Design</span>
+        </div>
+        <div class="details-content">
+            <p class="detail-anim-item"
+                style="text-align: center; font-size: 18px; color: rgba(17, 42, 70, 0.8); margin-bottom: 30px;">
+                Transforming spaces into beautiful, functional, and personalized environments. We showcase interiors
+                that reflect our clients’ lifestyle and taste.
+            </p>
+
+            <h3 class="detail-anim-item" style="font-size: 30px; font-weight: bold; margin-bottom: 10px;">Residential
+                Portfolio</h3>
+            <p class="detail-anim-item"
+                style="font-size: 16px; color: rgba(17, 42, 70, 0.8); line-height: 1.5; margin-bottom: 20px;">
+                We believe a home should be a sanctuary. Our design philosophy centers on creating a seamless flow
+                between spaces, balancing light, texture, and color.
+            </p>
+            <div class="gallery-grid">
+                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
+                    <img src="assets/is/residential/two.jpg">
+                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
+                </div>
+                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
+                    <img src="assets/is/residential/one.jpg">
+                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
+                </div>
+                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
+                    <img src="assets/is/residential/three.jpg">
+                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
+                </div>
+                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
+                    <img src="assets/is/residential/four.jpg">
+                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
+                </div>
+                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
+                    <img src="assets/is/residential/five.jpg">
+                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
+                </div>
+                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
+                    <img src="assets/is/residential/six.jpg">
+                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
+                </div>
+                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
+                    <img src="assets/is/residential/seven.jpg">
+                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
+                </div>
+                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
+                    <img src="assets/is/residential/eight.jpg">
+                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
+                </div>
+                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
+                    <img src="assets/is/residential/nine.jpg">
+                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
+                </div>
+                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
+                    <img src="assets/is/residential/ten.jpg">
+                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
+                </div>
+            </div>
+
+            <br><br>
+
+            <h3 class="detail-anim-item" style="font-size: 30px; font-weight: bold; margin-bottom: 10px;">Commercial
+                Portfolio</h3>
+            <p class="detail-anim-item"
+                style="font-size: 16px; color: rgba(17, 42, 70, 0.8); line-height: 1.5; margin-bottom: 20px;">
+                Functional and inspiring workspaces that drive productivity and reflect brand identity.
+            </p>
+            <div class="gallery-grid">
+                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
+                    <img src="assets/is/commercial/two.jpeg">
+                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
+                </div>
+                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
+                    <img src="assets/is/commercial/three.jpeg">
+                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
+                </div>
+                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
+                    <img src="assets/is/commercial/four.jpeg">
+                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
+                </div>
+                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
+                    <img src="assets/is/commercial/five.jpeg">
+                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
+                </div>
+                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
+                    <img src="assets/is/commercial/six.jpg">
+                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
+                </div>
+                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
+                    <img src="assets/is/commercial/seven.jpg">
+                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
+                </div>
+                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
+                    <img src="assets/is/commercial/eight.jpg">
+                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
+                </div>
+                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
+                    <img src="assets/is/commercial/nine.jpg">
+                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
+                </div>
+                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
+                    <img src="assets/is/commercial/ten.JPG">
+                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
+                </div>
+                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
+                    <img src="assets/is/commercial/eleven.JPG">
+                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
+                </div>
+            </div>
+
+            <div style="margin-top: 30px;">
+                <h4 class="detail-anim-item" style="font-size: 24px; font-weight: bold; margin-bottom: 10px;">What it
+                    includes:</h4>
+                <div class="chip-wrap detail-anim-item">
+                    <span class="chip">Consultation & Briefing</span>
+                    <span class="chip">Space Planning & Layout</span>
+                    <span class="chip">Concept and Mood boards</span>
+                    <span class="chip">Design Development</span>
+                    <span class="chip">Furniture sourcing & Design</span>
+                    <span class="chip">Project Management</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="coffeePage" class="details-page">
+        <div class="details-appbar">
+            <button class="back-btn" onclick="closePage('coffeePage')"><i class="fas fa-arrow-left"></i></button>
+            <span class="details-title">Premium Coffee</span>
+        </div>
+        <div class="details-content">
+            <p class="detail-anim-item"
+                style="text-align: center; font-size: 18px; color: rgba(17, 42, 70, 0.8); margin-bottom: 30px;">
+                Dedicated to delivering rich flavors, freshness, and a truly satisfying coffee experience for every
+                customer.
+            </p>
+
+            <h3 class="detail-anim-item" style="font-size: 30px; font-weight: bold; margin-bottom: 10px;">100% Arabica
+            </h3>
+            <p class="detail-anim-item"
+                style="font-size: 16px; color: rgba(17, 42, 70, 0.8); line-height: 1.5; margin-bottom: 20px;">
+                Offering premium, high quality 100% Arabica coffee, with plans to expand into Robusta and Ethiopia Yirga
+                cheffe.
+            </p>
+            <div class="gallery-grid">
+                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
+                    <img src="assets/coffee/two.jpeg">
+                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
+                </div>
+                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
+                    <img src="assets/coffee/one.jpeg">
+                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
+                </div>
+                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
+                    <img src="assets/coffee/four.jpeg">
+                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="lightbox" class="lightbox" onclick="closeLightbox()">
+        <span class="lightbox-close">&times;</span>
+        <img id="lightbox-img" src="">
+    </div>
+
+    <script>
+        gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+
+        // --- PRELOADER SEQUENCE ---
+        function startPreloader() {
+            // Timeline for text cycling
+            const tl = gsap.timeline({
+                onComplete: revealSiteContent
+            });
+            const textEl = document.getElementById('loaderText');
+
+            // The word "Luxury" is already visible in CSS.
+            // 1. Fade out Luxury
+            tl.to(textEl, { opacity: 0, duration: 0.5, delay: 0.7, ease: "power2.in" })
+
+                // 2. Set "Safari" -> Fade in -> Wait -> Fade Out
+                .set(textEl, { textContent: "Safari" })
+                .to(textEl, { opacity: 1, duration: 0.5, ease: "power2.out" })
+                .to(textEl, { opacity: 0, duration: 0.5, delay: 0.7, ease: "power2.in" })
+
+                // 3. Set "Coffee" -> Fade in -> Wait -> Fade Out
+                .set(textEl, { textContent: "Coffee" })
+                .to(textEl, { opacity: 1, duration: 0.5, ease: "power2.out" })
+                .to(textEl, { opacity: 0, duration: 0.5, delay: 0.7, ease: "power2.in" })
+
+                // 4. Slide up the whole preloader
+                .to("#preloader", {
+                    yPercent: -100,
+                    duration: 1.2,
+                    ease: "power4.inOut"
+                });
+        }
+
+        // Use window load to ensure all assets are ready before starting animation
+        window.addEventListener('load', () => {
+            startPreloader();
+        });
+
+        // --- REVEAL SITE CONTENT ---
+        function revealSiteContent() {
+            document.getElementById('preloader').style.display = 'none';
+
+            // Header slide down
+            gsap.to("header", {
+                y: 0,
+                duration: 1,
+                ease: "power3.out"
+            });
+
+            // Start Typing Slogan
+            startTypingSlogan();
+
+            // Initialize scroll triggers
+            initScrollAnimations();
+        }
+
+        // --- TYPING SLOGAN ---
+        function startTypingSlogan() {
+            const text = "Doing it Differently, With Style";
+            const el = document.getElementById('typingSlogan');
+            let i = 0;
+            const type = () => {
+                if (i < text.length) {
+                    el.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(type, 100);
+                }
+            };
+            type();
+        }
+
+        // --- SCROLL ANIMATIONS ---
+        function initScrollAnimations() {
+
+            // 1. CINEMATIC PARALLAX (Fixed: No empty space, subtle scaling)
+            gsap.utils.toArray('.parallax-section').forEach(section => {
+                const bg = section.querySelector('.parallax-bg');
+
+                // Movement: The bg is 120% tall and starts at -10% top.
+                // We move yPercent from 0 to 10. This moves the background DOWN slightly as we scroll DOWN.
+                // This keeps it within the -10% to 10% buffer range, preventing white gaps.
+                gsap.to(bg, {
+                    yPercent: 10,
+                    ease: "none",
+                    scrollTrigger: {
+                        trigger: section,
+                        start: "top bottom",
+                        end: "bottom top",
+                        scrub: true
+                    }
+                });
+
+                // Subtle Scale: Only scale a "tiny bit" (1.0 to 1.05) strictly on scroll (scrub)
+                gsap.to(bg, {
+                    scale: 1.05,
+                    ease: "none",
+                    scrollTrigger: {
+                        trigger: section,
+                        start: "top bottom",
+                        end: "bottom top",
+                        scrub: true
+                    }
+                });
+            });
+
+            // 2. Content Reveal
+            gsap.utils.toArray('.content-box').forEach(box => {
+                gsap.to(box, {
+                    scrollTrigger: {
+                        trigger: box.parentElement,
+                        start: "top 60%",
+                        end: "bottom 80%",
+                        toggleActions: "play none none reverse"
+                    },
+                    opacity: 1,
+                    y: 0,
+                    duration: 1.2,
+                    ease: "power2.out"
+                });
+            });
+
+            // 3. About Section Elements
+            gsap.utils.toArray('.gsap-reveal').forEach((elem) => {
+                gsap.to(elem, {
+                    scrollTrigger: {
+                        trigger: elem,
+                        start: "top 85%",
+                        toggleActions: "play none none reverse"
+                    },
+                    opacity: 1,
+                    y: 0,
+                    duration: 1,
+                    ease: "power3.out"
+                });
+            });
+
+            // 4. Contact items stagger
+            gsap.to(".contact-item", {
+                scrollTrigger: {
+                    trigger: ".contact-section",
+                    start: "top 70%"
+                },
+                opacity: 1,
+                y: 0,
+                stagger: 0.2,
+                duration: 0.8,
+                ease: "back.out(1.7)"
+            });
+
+            // 5. Social icons stagger popup
+            gsap.to(".social-icon", {
+                scrollTrigger: {
+                    trigger: ".social-wrap",
+                    start: "top 90%"
+                },
+                opacity: 1,
+                scale: 1,
+                stagger: 0.1,
+                duration: 0.6,
+                ease: "back.out(2)"
+            });
+
+            // Modern button hover effect
+            gsap.utils.toArray(".modern-btn").forEach(btn => {
+                btn.addEventListener("mouseenter", () => gsap.to(btn, { scale: 1.05, duration: 0.3 }));
+                btn.addEventListener("mouseleave", () => gsap.to(btn, { scale: 1, duration: 0.3 }));
+            });
+        }
+
+        // --- NAVIGATION ---
+        function scrollToSection(id) {
+            gsap.to(window, {
+                duration: 1.2,
+                scrollTo: { y: "#" + id, offsetY: 60 },
+                ease: "power3.inOut"
+            });
+        }
+
+        // --- MOBILE DRAWER ---
+        function toggleDrawer() {
+            const drawer = document.getElementById('mobileDrawer');
+            const overlay = document.querySelector('.drawer-overlay');
+            if (drawer.classList.contains('open')) {
+                drawer.classList.remove('open');
+                overlay.classList.remove('open');
+            } else {
+                drawer.classList.add('open');
+                overlay.classList.add('open');
+            }
+        }
+
+        function drawerNavigate(id) {
+            toggleDrawer();
+            scrollToSection(id);
+        }
+
+        // --- DETAIL PAGES ---
+        function openPage(pageId) {
+            const page = document.getElementById(pageId);
+            page.style.display = 'block';
+
+            gsap.to(page, {
+                yPercent: -100,
+                duration: 0.8,
+                ease: "power4.inOut",
+                onComplete: () => {
+                    document.body.style.overflow = 'hidden';
+                    animatePageContent(page);
+                }
+            });
+        }
+
+        function animatePageContent(pageContext) {
+            const items = pageContext.querySelectorAll('.detail-anim-item');
+            gsap.set(items, { opacity: 0, y: 30 });
+
+            gsap.to(items, {
+                opacity: 1,
+                y: 0,
+                stagger: 0.05,
+                duration: 0.6,
+                ease: "power2.out",
+                delay: 0.1
+            });
+        }
+
+        function closePage(pageId) {
+            const page = document.getElementById(pageId);
+            document.body.style.overflow = 'auto';
+
+            gsap.to(page, {
+                yPercent: 0,
+                duration: 0.6,
+                ease: "power4.in",
+                onComplete: () => {
+                    page.style.display = 'none';
+                }
+            });
+        }
+
+        // --- GALLERY ROTATION & LIGHTBOX ---
+        function rotateImage(event, btnElement) {
+            event.stopPropagation();
+            const img = btnElement.parentElement.querySelector('img');
+
+            let currentRot = img.getAttribute('data-rotation') || 0;
+            currentRot = parseInt(currentRot) + 90;
+
+            gsap.to(img, {
+                rotation: currentRot,
+                duration: 0.5,
+                ease: "back.out(1.7)"
+            });
+            img.setAttribute('data-rotation', currentRot);
+        }
+
+        function openLightbox(element) {
+            const imgInGrid = element.querySelector('img');
+            const src = imgInGrid.src;
+            const currentRot = imgInGrid.getAttribute('data-rotation') || 0;
+
+            const lightbox = document.getElementById('lightbox');
+            const lbImg = document.getElementById('lightbox-img');
+
+            lbImg.src = src;
+
+            lightbox.style.display = 'flex';
+            gsap.set(lbImg, { rotation: currentRot, scale: 0.8, opacity: 0 });
+            gsap.set(lightbox, { opacity: 0 });
+
+            gsap.to(lightbox, { opacity: 1, duration: 0.3 });
+            gsap.to(lbImg, {
+                scale: 1,
+                opacity: 1,
+                duration: 0.4,
+                ease: "back.out(1.2)"
+            });
+        }
+
+        function closeLightbox() {
+            const lightbox = document.getElementById('lightbox');
+            const lbImg = document.getElementById('lightbox-img');
+
+            gsap.to(lbImg, { scale: 0.8, opacity: 0, duration: 0.3 });
+            gsap.to(lightbox, {
+                opacity: 0,
+                duration: 0.3,
+                onComplete: () => { lightbox.style.display = 'none'; }
+            });
+        }
+    </script>
+</body>
+
+</html>
