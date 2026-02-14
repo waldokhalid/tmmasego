@@ -17,6 +17,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/TextPlugin.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
 
     <style>
         /* --- VARIABLES & RESET --- */
@@ -37,9 +40,7 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        html,
-        body {
-            height: 100%;
+        html {
             width: 100%;
         }
 
@@ -48,8 +49,8 @@
             background-color: var(--background-color);
             color: var(--primary-text);
             overflow-x: hidden;
+            width: 100%;
             -webkit-font-smoothing: antialiased;
-            /* Allow body to be visible, we control elements individually */
             visibility: visible;
             opacity: 1;
         }
@@ -90,7 +91,6 @@
             letter-spacing: 1.2px;
             margin-bottom: 18px;
             opacity: 1;
-            /* Start visible for the first word */
         }
 
         .loader-spinner {
@@ -103,13 +103,8 @@
         }
 
         @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         /* --- NAVIGATION --- */
@@ -126,7 +121,6 @@
             z-index: 1000;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
             transform: translateY(-100%);
-            /* Hidden initially */
         }
 
         .logo-container {
@@ -162,6 +156,8 @@
             cursor: pointer;
             text-transform: uppercase;
             position: relative;
+            text-decoration: none;
+            display: inline-block;
         }
 
         .nav-btn::after {
@@ -246,16 +242,11 @@
             height: 100vh;
             width: 100%;
             overflow: hidden;
-            /* Crucial for clipping */
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        /* FIXED PARALLAX BG:
-           Height 120% + Top -10% ensures we have overlap at top and bottom.
-           When we scroll, we move it slightly within this buffer so no white space shows.
-        */
         .parallax-bg {
             position: absolute;
             top: -10%;
@@ -406,22 +397,32 @@
             color: rgba(17, 42, 70, 0.8);
         }
 
-        /* --- CONTACT & PARTNERS --- */
+        /* --- UPDATED PARTNERS SECTION --- */
         .partners-section {
-            padding: 50px 0;
+            padding: 60px 20px;
             background-color: var(--background-color);
+            text-align: center;
+        }
+
+        .partners-container {
             display: flex;
-            flex-direction: column;
-            align-items: center;
+            flex-wrap: wrap;
             justify-content: center;
+            align-items: center;
+            gap: 40px;
+            margin-top: 30px;
         }
 
         .partner-img {
             height: 80px;
             border-radius: 12px;
-            margin: 15px;
             object-fit: contain;
             display: block;
+            transition: transform 0.3s ease;
+        }
+
+        .partner-img:hover {
+            transform: scale(1.05);
         }
 
         .contact-section {
@@ -481,6 +482,8 @@
             transform: translateY(100%);
             padding-bottom: 50px;
             display: none;
+            overscroll-behavior: contain;
+            -webkit-overflow-scrolling: touch;
         }
 
         .details-appbar {
@@ -607,27 +610,16 @@
 
         /* --- RESPONSIVE --- */
         @media (max-width: 850px) {
-            .nav-links {
-                display: none;
-            }
-
-            .mobile-menu-btn {
-                display: block;
-            }
+            .nav-links { display: none; }
+            .mobile-menu-btn { display: block; }
         }
 
         @media (max-width: 768px) {
-            .section-title {
-                font-size: 50px;
-            }
-
-            .hero-title {
-                font-size: 36px;
-            }
-
-            .gallery-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
+            .section-title { font-size: 50px; }
+            .hero-title { font-size: 36px; }
+            .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+            .partners-container { gap: 20px; }
+            .partner-img { height: 60px; }
         }
     </style>
 </head>
@@ -645,11 +637,11 @@
             <span class="logo-text">T.M Masego</span>
         </div>
         <nav class="nav-links">
-            <button class="nav-btn" onclick="scrollToSection('about')">About</button>
-            <button class="nav-btn" onclick="scrollToSection('safari')">Safari</button>
-            <button class="nav-btn" onclick="scrollToSection('interior')">Interior</button>
-            <button class="nav-btn" onclick="scrollToSection('coffee')">Coffee</button>
-            <button class="nav-btn" onclick="scrollToSection('contact')">Contact</button>
+            <a href="#about" class="nav-btn" onclick="scrollToSection('about'); return false;">About</a>
+            <a href="#safari" class="nav-btn" onclick="scrollToSection('safari'); return false;">Safari</a>
+            <a href="#interior" class="nav-btn" onclick="scrollToSection('interior'); return false;">Interior</a>
+            <a href="#coffee" class="nav-btn" onclick="scrollToSection('coffee'); return false;">Coffee</a>
+            <a href="#contact" class="nav-btn" onclick="scrollToSection('contact'); return false;">Contact</a>
         </nav>
         <button class="mobile-menu-btn" onclick="toggleDrawer()"><i class="fas fa-bars"></i></button>
     </header>
@@ -678,7 +670,7 @@
         <div class="parallax-bg" style="background-image: url('assets/tt/one.jpeg');"></div>
         <div class="overlay slogan-overlay"></div>
         <div class="content-box">
-            <h1 class="hero-title" id="typingSlogan"></h1>
+            <h1 class="hero-title" id="typingSlogan">Doing it Differently, With Style</h1>
         </div>
     </section>
 
@@ -755,7 +747,11 @@
     <section id="contact">
         <div class="partners-section gsap-reveal">
             <h3 style="font-size: 30px; font-weight: bold; margin-bottom: 30px;">Our Partners</h3>
-            <img src="assets/masego_partner.jpeg" alt="Partner" class="partner-img">
+            <div class="partners-container">
+                <img src="assets/masego_partner.jpeg" alt="Partner 1" class="partner-img">
+                <img src="assets/partner_one.PNG" alt="Partner 2" class="partner-img">
+                <img src="assets/partner_two.png" alt="Partner 3" class="partner-img">
+            </div>
         </div>
 
         <div class="contact-section">
@@ -781,255 +777,23 @@
         </div>
     </section>
 
-    <div id="safariPage" class="details-page">
+    <div id="safariPage" class="details-page" data-lenis-prevent>
         <div class="details-appbar">
             <button class="back-btn" onclick="closePage('safariPage')"><i class="fas fa-arrow-left"></i></button>
             <span class="details-title">The Safari Experience</span>
         </div>
         <div class="details-content">
-            <p class="detail-anim-item"
-                style="text-align: center; font-size: 18px; color: rgba(17, 42, 70, 0.8); margin-bottom: 30px;">
-                Creating unforgettable journeys that blend adventure, discovery, and relaxation. We take you to
-                breathtaking destinations across Kenya and beyond.
+            <p class="detail-anim-item" style="text-align: center; font-size: 18px; color: rgba(17, 42, 70, 0.8); margin-bottom: 30px;">
+                Creating unforgettable journeys that blend adventure, discovery, and relaxation.
             </p>
-
-            <h3 class="detail-anim-item" style="font-size: 30px; font-weight: bold; margin-bottom: 10px;">The Great
-                Migration</h3>
-            <p class="detail-anim-item"
-                style="font-size: 16px; color: rgba(17, 42, 70, 0.8); line-height: 1.5; margin-bottom: 20px;">
-                Witness one of nature's most spectacular events. Millions of wildebeest, zebra, and gazelle traverse the
-                Serengeti ecosystem in a continuous search for fresh grazing.
-            </p>
-
+            <h3 class="detail-anim-item" style="font-size: 30px; font-weight: bold; margin-bottom: 10px;">The Great Migration</h3>
             <div class="gallery-grid">
                 <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
-                    <img src="assets/tt/three.jpeg">
+                    <img src="assets/tt/three.jpeg" loading="lazy" alt="Safari">
                     <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
                 </div>
                 <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
-                    <img src="assets/tt/four.jpeg">
-                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
-                </div>
-                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
-                    <img src="assets/tt/five.jpeg">
-                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
-                </div>
-                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
-                    <img src="assets/tt/six.jpeg">
-                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
-                </div>
-                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
-                    <img src="assets/tt/seven.jpeg">
-                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
-                </div>
-                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
-                    <img src="assets/tt/eight.jpg">
-                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
-                </div>
-                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
-                    <img src="assets/tt/nine.jpeg">
-                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
-                </div>
-                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
-                    <img src="assets/tt/ten.jpeg">
-                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
-                </div>
-                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
-                    <img src="assets/tt/eleven.jpeg">
-                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
-                </div>
-                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
-                    <img src="assets/tt/twelve.jpg">
-                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
-                </div>
-                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
-                    <img src="assets/tt/thirteen.jpg">
-                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
-                </div>
-                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
-                    <img src="assets/tt/fourteen.jpg">
-                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
-                </div>
-                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
-                    <img src="assets/tt/fifteen.jpg">
-                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
-                </div>
-            </div>
-
-            <div style="margin-top: 30px;">
-                <h4 class="detail-anim-item" style="font-size: 24px; font-weight: bold; margin-bottom: 10px;">What it
-                    includes:</h4>
-                <div class="chip-wrap detail-anim-item">
-                    <span class="chip">Accommodation</span>
-                    <span class="chip">Transport & Transfers</span>
-                    <span class="chip">Park Fees & Entry Tickets</span>
-                    <span class="chip">Meals & Dining Experiences</span>
-                    <span class="chip">Guided Tours & Excursions</span>
-                    <span class="chip">Itinerary Planning</span>
-                    <span class="chip">Photography Moments</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="interiorPage" class="details-page">
-        <div class="details-appbar">
-            <button class="back-btn" onclick="closePage('interiorPage')"><i class="fas fa-arrow-left"></i></button>
-            <span class="details-title">Bespoke Interior Design</span>
-        </div>
-        <div class="details-content">
-            <p class="detail-anim-item"
-                style="text-align: center; font-size: 18px; color: rgba(17, 42, 70, 0.8); margin-bottom: 30px;">
-                Transforming spaces into beautiful, functional, and personalized environments. We showcase interiors
-                that reflect our clients’ lifestyle and taste.
-            </p>
-
-            <h3 class="detail-anim-item" style="font-size: 30px; font-weight: bold; margin-bottom: 10px;">Residential
-                Portfolio</h3>
-            <p class="detail-anim-item"
-                style="font-size: 16px; color: rgba(17, 42, 70, 0.8); line-height: 1.5; margin-bottom: 20px;">
-                We believe a home should be a sanctuary. Our design philosophy centers on creating a seamless flow
-                between spaces, balancing light, texture, and color.
-            </p>
-            <div class="gallery-grid">
-                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
-                    <img src="assets/is/residential/two.jpg">
-                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
-                </div>
-                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
-                    <img src="assets/is/residential/one.jpg">
-                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
-                </div>
-                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
-                    <img src="assets/is/residential/three.jpg">
-                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
-                </div>
-                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
-                    <img src="assets/is/residential/four.jpg">
-                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
-                </div>
-                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
-                    <img src="assets/is/residential/five.jpg">
-                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
-                </div>
-                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
-                    <img src="assets/is/residential/six.jpg">
-                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
-                </div>
-                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
-                    <img src="assets/is/residential/seven.jpg">
-                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
-                </div>
-                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
-                    <img src="assets/is/residential/eight.jpg">
-                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
-                </div>
-                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
-                    <img src="assets/is/residential/nine.jpg">
-                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
-                </div>
-                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
-                    <img src="assets/is/residential/ten.jpg">
-                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
-                </div>
-            </div>
-
-            <br><br>
-
-            <h3 class="detail-anim-item" style="font-size: 30px; font-weight: bold; margin-bottom: 10px;">Commercial
-                Portfolio</h3>
-            <p class="detail-anim-item"
-                style="font-size: 16px; color: rgba(17, 42, 70, 0.8); line-height: 1.5; margin-bottom: 20px;">
-                Functional and inspiring workspaces that drive productivity and reflect brand identity.
-            </p>
-            <div class="gallery-grid">
-                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
-                    <img src="assets/is/commercial/two.jpeg">
-                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
-                </div>
-                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
-                    <img src="assets/is/commercial/three.jpeg">
-                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
-                </div>
-                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
-                    <img src="assets/is/commercial/four.jpeg">
-                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
-                </div>
-                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
-                    <img src="assets/is/commercial/five.jpeg">
-                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
-                </div>
-                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
-                    <img src="assets/is/commercial/six.jpg">
-                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
-                </div>
-                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
-                    <img src="assets/is/commercial/seven.jpg">
-                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
-                </div>
-                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
-                    <img src="assets/is/commercial/eight.jpg">
-                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
-                </div>
-                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
-                    <img src="assets/is/commercial/nine.jpg">
-                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
-                </div>
-                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
-                    <img src="assets/is/commercial/ten.JPG">
-                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
-                </div>
-                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
-                    <img src="assets/is/commercial/eleven.JPG">
-                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
-                </div>
-            </div>
-
-            <div style="margin-top: 30px;">
-                <h4 class="detail-anim-item" style="font-size: 24px; font-weight: bold; margin-bottom: 10px;">What it
-                    includes:</h4>
-                <div class="chip-wrap detail-anim-item">
-                    <span class="chip">Consultation & Briefing</span>
-                    <span class="chip">Space Planning & Layout</span>
-                    <span class="chip">Concept and Mood boards</span>
-                    <span class="chip">Design Development</span>
-                    <span class="chip">Furniture sourcing & Design</span>
-                    <span class="chip">Project Management</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="coffeePage" class="details-page">
-        <div class="details-appbar">
-            <button class="back-btn" onclick="closePage('coffeePage')"><i class="fas fa-arrow-left"></i></button>
-            <span class="details-title">Premium Coffee</span>
-        </div>
-        <div class="details-content">
-            <p class="detail-anim-item"
-                style="text-align: center; font-size: 18px; color: rgba(17, 42, 70, 0.8); margin-bottom: 30px;">
-                Dedicated to delivering rich flavors, freshness, and a truly satisfying coffee experience for every
-                customer.
-            </p>
-
-            <h3 class="detail-anim-item" style="font-size: 30px; font-weight: bold; margin-bottom: 10px;">100% Arabica
-            </h3>
-            <p class="detail-anim-item"
-                style="font-size: 16px; color: rgba(17, 42, 70, 0.8); line-height: 1.5; margin-bottom: 20px;">
-                Offering premium, high quality 100% Arabica coffee, with plans to expand into Robusta and Ethiopia Yirga
-                cheffe.
-            </p>
-            <div class="gallery-grid">
-                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
-                    <img src="assets/coffee/two.jpeg">
-                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
-                </div>
-                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
-                    <img src="assets/coffee/one.jpeg">
-                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
-                </div>
-                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
-                    <img src="assets/coffee/four.jpeg">
+                    <img src="assets/tt/four.jpeg" loading="lazy" alt="Safari">
                     <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
                 </div>
             </div>
@@ -1042,294 +806,109 @@
     </div>
 
     <script>
-        gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+        gsap.registerPlugin(ScrollTrigger, ScrollToPlugin, TextPlugin);
 
-        // --- PRELOADER SEQUENCE ---
+        const lenis = new Lenis({
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            smooth: true
+        });
+
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+
+        lenis.on('scroll', ScrollTrigger.update);
+        gsap.ticker.add((time) => {
+            lenis.raf(time * 1000);
+        });
+        gsap.ticker.lagSmoothing(0);
+
         function startPreloader() {
-            // Timeline for text cycling
-            const tl = gsap.timeline({
-                onComplete: revealSiteContent
-            });
+            const tl = gsap.timeline({ onComplete: revealSiteContent });
             const textEl = document.getElementById('loaderText');
-
-            // The word "Luxury" is already visible in CSS.
-            // 1. Fade out Luxury
             tl.to(textEl, { opacity: 0, duration: 0.5, delay: 0.7, ease: "power2.in" })
-
-                // 2. Set "Safari" -> Fade in -> Wait -> Fade Out
                 .set(textEl, { textContent: "Safari" })
                 .to(textEl, { opacity: 1, duration: 0.5, ease: "power2.out" })
                 .to(textEl, { opacity: 0, duration: 0.5, delay: 0.7, ease: "power2.in" })
-
-                // 3. Set "Coffee" -> Fade in -> Wait -> Fade Out
                 .set(textEl, { textContent: "Coffee" })
                 .to(textEl, { opacity: 1, duration: 0.5, ease: "power2.out" })
                 .to(textEl, { opacity: 0, duration: 0.5, delay: 0.7, ease: "power2.in" })
-
-                // 4. Slide up the whole preloader
-                .to("#preloader", {
-                    yPercent: -100,
-                    duration: 1.2,
-                    ease: "power4.inOut"
-                });
+                .to("#preloader", { yPercent: -100, duration: 1.2, ease: "power4.inOut" });
         }
 
-        // Use window load to ensure all assets are ready before starting animation
-        window.addEventListener('load', () => {
-            startPreloader();
-        });
+        window.addEventListener('load', () => { startPreloader(); });
 
-        // --- REVEAL SITE CONTENT ---
         function revealSiteContent() {
             document.getElementById('preloader').style.display = 'none';
-
-            // Header slide down
-            gsap.to("header", {
-                y: 0,
-                duration: 1,
-                ease: "power3.out"
-            });
-
-            // Start Typing Slogan
+            gsap.to("header", { y: 0, duration: 1, ease: "power3.out" });
             startTypingSlogan();
-
-            // Initialize scroll triggers
             initScrollAnimations();
         }
 
-        // --- TYPING SLOGAN ---
         function startTypingSlogan() {
-            const text = "Doing it Differently, With Style";
-            const el = document.getElementById('typingSlogan');
-            let i = 0;
-            const type = () => {
-                if (i < text.length) {
-                    el.innerHTML += text.charAt(i);
-                    i++;
-                    setTimeout(type, 100);
-                }
-            };
-            type();
+            gsap.from("#typingSlogan", { duration: 2.5, text: "", ease: "none", delay: 0.5 });
         }
 
-        // --- SCROLL ANIMATIONS ---
         function initScrollAnimations() {
-
-            // 1. CINEMATIC PARALLAX (Fixed: No empty space, subtle scaling)
             gsap.utils.toArray('.parallax-section').forEach(section => {
                 const bg = section.querySelector('.parallax-bg');
-
-                // Movement: The bg is 120% tall and starts at -10% top.
-                // We move yPercent from 0 to 10. This moves the background DOWN slightly as we scroll DOWN.
-                // This keeps it within the -10% to 10% buffer range, preventing white gaps.
-                gsap.to(bg, {
-                    yPercent: 10,
-                    ease: "none",
-                    scrollTrigger: {
-                        trigger: section,
-                        start: "top bottom",
-                        end: "bottom top",
-                        scrub: true
-                    }
-                });
-
-                // Subtle Scale: Only scale a "tiny bit" (1.0 to 1.05) strictly on scroll (scrub)
-                gsap.to(bg, {
-                    scale: 1.05,
-                    ease: "none",
-                    scrollTrigger: {
-                        trigger: section,
-                        start: "top bottom",
-                        end: "bottom top",
-                        scrub: true
-                    }
-                });
+                gsap.to(bg, { yPercent: 10, scale: 1.05, ease: "none", scrollTrigger: { trigger: section, start: "top bottom", end: "bottom top", scrub: 1 } });
             });
-
-            // 2. Content Reveal
             gsap.utils.toArray('.content-box').forEach(box => {
-                gsap.to(box, {
-                    scrollTrigger: {
-                        trigger: box.parentElement,
-                        start: "top 60%",
-                        end: "bottom 80%",
-                        toggleActions: "play none none reverse"
-                    },
-                    opacity: 1,
-                    y: 0,
-                    duration: 1.2,
-                    ease: "power2.out"
-                });
+                gsap.to(box, { scrollTrigger: { trigger: box.parentElement, start: "top 60%", toggleActions: "play none none reverse" }, opacity: 1, y: 0, duration: 1.2 });
             });
-
-            // 3. About Section Elements
             gsap.utils.toArray('.gsap-reveal').forEach((elem) => {
-                gsap.to(elem, {
-                    scrollTrigger: {
-                        trigger: elem,
-                        start: "top 85%",
-                        toggleActions: "play none none reverse"
-                    },
-                    opacity: 1,
-                    y: 0,
-                    duration: 1,
-                    ease: "power3.out"
-                });
+                gsap.to(elem, { scrollTrigger: { trigger: elem, start: "top 85%", toggleActions: "play none none reverse" }, opacity: 1, y: 0, duration: 1 });
             });
-
-            // 4. Contact items stagger
-            gsap.to(".contact-item", {
-                scrollTrigger: {
-                    trigger: ".contact-section",
-                    start: "top 70%"
-                },
-                opacity: 1,
-                y: 0,
-                stagger: 0.2,
-                duration: 0.8,
-                ease: "back.out(1.7)"
-            });
-
-            // 5. Social icons stagger popup
-            gsap.to(".social-icon", {
-                scrollTrigger: {
-                    trigger: ".social-wrap",
-                    start: "top 90%"
-                },
-                opacity: 1,
-                scale: 1,
-                stagger: 0.1,
-                duration: 0.6,
-                ease: "back.out(2)"
-            });
-
-            // Modern button hover effect
-            gsap.utils.toArray(".modern-btn").forEach(btn => {
-                btn.addEventListener("mouseenter", () => gsap.to(btn, { scale: 1.05, duration: 0.3 }));
-                btn.addEventListener("mouseleave", () => gsap.to(btn, { scale: 1, duration: 0.3 }));
-            });
+            gsap.to(".contact-item", { scrollTrigger: { trigger: ".contact-section", start: "top 70%" }, opacity: 1, y: 0, stagger: 0.2, duration: 0.8 });
+            gsap.to(".social-icon", { scrollTrigger: { trigger: ".social-wrap", start: "top 90%" }, opacity: 1, scale: 1, stagger: 0.1, duration: 0.6 });
         }
 
-        // --- NAVIGATION ---
-        function scrollToSection(id) {
-            gsap.to(window, {
-                duration: 1.2,
-                scrollTo: { y: "#" + id, offsetY: 60 },
-                ease: "power3.inOut"
-            });
-        }
-
-        // --- MOBILE DRAWER ---
+        function scrollToSection(id) { lenis.scrollTo("#" + id, { offset: -60, duration: 1.2 }); }
         function toggleDrawer() {
-            const drawer = document.getElementById('mobileDrawer');
-            const overlay = document.querySelector('.drawer-overlay');
-            if (drawer.classList.contains('open')) {
-                drawer.classList.remove('open');
-                overlay.classList.remove('open');
-            } else {
-                drawer.classList.add('open');
-                overlay.classList.add('open');
-            }
+            const d = document.getElementById('mobileDrawer');
+            const o = document.querySelector('.drawer-overlay');
+            d.classList.toggle('open');
+            o.classList.toggle('open');
         }
+        function drawerNavigate(id) { toggleDrawer(); scrollToSection(id); }
 
-        function drawerNavigate(id) {
-            toggleDrawer();
-            scrollToSection(id);
-        }
-
-        // --- DETAIL PAGES ---
         function openPage(pageId) {
-            const page = document.getElementById(pageId);
-            page.style.display = 'block';
-
-            gsap.to(page, {
-                yPercent: -100,
-                duration: 0.8,
-                ease: "power4.inOut",
-                onComplete: () => {
-                    document.body.style.overflow = 'hidden';
-                    animatePageContent(page);
-                }
-            });
+            const p = document.getElementById(pageId);
+            p.style.display = 'block';
+            lenis.stop();
+            gsap.to(p, { yPercent: -100, duration: 0.8, ease: "power4.inOut", onComplete: () => { animatePageContent(p); } });
         }
-
-        function animatePageContent(pageContext) {
-            const items = pageContext.querySelectorAll('.detail-anim-item');
-            gsap.set(items, { opacity: 0, y: 30 });
-
-            gsap.to(items, {
-                opacity: 1,
-                y: 0,
-                stagger: 0.05,
-                duration: 0.6,
-                ease: "power2.out",
-                delay: 0.1
-            });
+        function animatePageContent(page) {
+            gsap.to(page.querySelectorAll('.detail-anim-item'), { opacity: 1, y: 0, stagger: 0.05, duration: 0.6 });
         }
-
         function closePage(pageId) {
-            const page = document.getElementById(pageId);
-            document.body.style.overflow = 'auto';
-
-            gsap.to(page, {
-                yPercent: 0,
-                duration: 0.6,
-                ease: "power4.in",
-                onComplete: () => {
-                    page.style.display = 'none';
-                }
-            });
+            const p = document.getElementById(pageId);
+            lenis.start();
+            gsap.to(p, { yPercent: 0, duration: 0.6, ease: "power4.in", onComplete: () => { p.style.display = 'none'; } });
         }
-
-        // --- GALLERY ROTATION & LIGHTBOX ---
-        function rotateImage(event, btnElement) {
-            event.stopPropagation();
-            const img = btnElement.parentElement.querySelector('img');
-
-            let currentRot = img.getAttribute('data-rotation') || 0;
-            currentRot = parseInt(currentRot) + 90;
-
-            gsap.to(img, {
-                rotation: currentRot,
-                duration: 0.5,
-                ease: "back.out(1.7)"
-            });
-            img.setAttribute('data-rotation', currentRot);
+        function rotateImage(e, b) {
+            e.stopPropagation();
+            const i = b.parentElement.querySelector('img');
+            let r = (parseInt(i.getAttribute('data-rotation') || 0) + 90);
+            gsap.to(i, { rotation: r, duration: 0.5 });
+            i.setAttribute('data-rotation', r);
         }
-
-        function openLightbox(element) {
-            const imgInGrid = element.querySelector('img');
-            const src = imgInGrid.src;
-            const currentRot = imgInGrid.getAttribute('data-rotation') || 0;
-
-            const lightbox = document.getElementById('lightbox');
-            const lbImg = document.getElementById('lightbox-img');
-
-            lbImg.src = src;
-
-            lightbox.style.display = 'flex';
-            gsap.set(lbImg, { rotation: currentRot, scale: 0.8, opacity: 0 });
-            gsap.set(lightbox, { opacity: 0 });
-
-            gsap.to(lightbox, { opacity: 1, duration: 0.3 });
-            gsap.to(lbImg, {
-                scale: 1,
-                opacity: 1,
-                duration: 0.4,
-                ease: "back.out(1.2)"
-            });
+        function openLightbox(e) {
+            const i = e.querySelector('img');
+            const lb = document.getElementById('lightbox'), lbi = document.getElementById('lightbox-img');
+            lbi.src = i.src;
+            lb.style.display = 'flex';
+            lenis.stop();
+            gsap.to(lb, { opacity: 1, duration: 0.3 });
+            gsap.fromTo(lbi, { scale: 0.8, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.4 });
         }
-
         function closeLightbox() {
-            const lightbox = document.getElementById('lightbox');
-            const lbImg = document.getElementById('lightbox-img');
-
-            gsap.to(lbImg, { scale: 0.8, opacity: 0, duration: 0.3 });
-            gsap.to(lightbox, {
-                opacity: 0,
-                duration: 0.3,
-                onComplete: () => { lightbox.style.display = 'none'; }
-            });
+            lenis.start();
+            gsap.to(document.getElementById('lightbox'), { opacity: 0, duration: 0.3, onComplete: () => { document.getElementById('lightbox').style.display = 'none'; } });
         }
     </script>
 </body>
