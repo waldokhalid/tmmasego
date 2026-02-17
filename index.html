@@ -397,7 +397,7 @@
             color: rgba(17, 42, 70, 0.8);
         }
 
-        /* --- UPDATED PARTNERS SECTION --- */
+        /* --- PARTNERS SECTION (UPDATED FOR HORIZONTAL ALIGNMENT) --- */
         .partners-section {
             padding: 60px 20px;
             background-color: var(--background-color);
@@ -409,15 +409,16 @@
             flex-wrap: wrap;
             justify-content: center;
             align-items: center;
-            gap: 40px;
-            margin-top: 30px;
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
         .partner-img {
             height: 80px;
+            width: auto;
             border-radius: 12px;
             object-fit: contain;
-            display: block;
             transition: transform 0.3s ease;
         }
 
@@ -425,6 +426,7 @@
             transform: scale(1.05);
         }
 
+        /* --- CONTACT --- */
         .contact-section {
             padding: 80px 20px;
             background-color: var(--background-color);
@@ -618,7 +620,6 @@
             .section-title { font-size: 50px; }
             .hero-title { font-size: 36px; }
             .gallery-grid { grid-template-columns: repeat(2, 1fr); }
-            .partners-container { gap: 20px; }
             .partner-img { height: 60px; }
         }
     </style>
@@ -746,11 +747,11 @@
 
     <section id="contact">
         <div class="partners-section gsap-reveal">
-            <h3 style="font-size: 30px; font-weight: bold; margin-bottom: 30px;">Our Partners</h3>
+            <h3 style="font-size: 30px; font-weight: bold; margin-bottom: 40px;">Our Partners</h3>
             <div class="partners-container">
-                <img src="assets/masego_partner.jpeg" alt="Partner 1" class="partner-img">
-                <img src="assets/partner_one.PNG" alt="Partner 2" class="partner-img">
-                <img src="assets/partner_two.png" alt="Partner 3" class="partner-img">
+                <img src="assets/masego_partner.jpeg" alt="Masego Partner" class="partner-img">
+                <img src="assets/partner_one.PNG" alt="Partner One" class="partner-img">
+                <img src="assets/partner_two.png" alt="Partner Two" class="partner-img">
             </div>
         </div>
 
@@ -784,18 +785,75 @@
         </div>
         <div class="details-content">
             <p class="detail-anim-item" style="text-align: center; font-size: 18px; color: rgba(17, 42, 70, 0.8); margin-bottom: 30px;">
-                Creating unforgettable journeys that blend adventure, discovery, and relaxation.
+                Creating unforgettable journeys that blend adventure, discovery, and relaxation. We take you to breathtaking destinations across Kenya and beyond.
             </p>
             <h3 class="detail-anim-item" style="font-size: 30px; font-weight: bold; margin-bottom: 10px;">The Great Migration</h3>
+            <p class="detail-anim-item" style="font-size: 16px; color: rgba(17, 42, 70, 0.8); line-height: 1.5; margin-bottom: 20px;">
+                Witness one of nature's most spectacular events. Millions of wildebeest, zebra, and gazelle traverse the Serengeti ecosystem in a continuous search for fresh grazing.
+            </p>
             <div class="gallery-grid">
-                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
-                    <img src="assets/tt/three.jpeg" loading="lazy" alt="Safari">
-                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
+                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)"><img src="assets/tt/three.jpeg" loading="lazy"><div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div></div>
+                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)"><img src="assets/tt/four.jpeg" loading="lazy"><div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div></div>
+                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)"><img src="assets/tt/five.jpeg" loading="lazy"><div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div></div>
+                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)"><img src="assets/tt/six.jpeg" loading="lazy"><div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div></div>
+                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)"><img src="assets/tt/seven.jpeg" loading="lazy"><div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div></div>
+                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)"><img src="assets/tt/eight.jpg" loading="lazy"><div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div></div>
+                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)"><img src="assets/tt/nine.jpeg" loading="lazy"><div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div></div>
+                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)"><img src="assets/tt/ten.jpeg" loading="lazy"><div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div></div>
+                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)"><img src="assets/tt/eleven.jpeg" loading="lazy"><div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div></div>
+                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)"><img src="assets/tt/twelve.jpg" loading="lazy"><div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div></div>
+                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)"><img src="assets/tt/thirteen.jpg" loading="lazy"><div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div></div>
+                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)"><img src="assets/tt/fourteen.jpg" loading="lazy"><div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div></div>
+                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)"><img src="assets/tt/fifteen.jpg" loading="lazy"><div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div></div>
+            </div>
+            <div style="margin-top: 30px;">
+                <h4 class="detail-anim-item" style="font-size: 24px; font-weight: bold; margin-bottom: 10px;">What it includes:</h4>
+                <div class="chip-wrap detail-anim-item">
+                    <span class="chip">Accommodation</span><span class="chip">Transport & Transfers</span><span class="chip">Park Fees</span><span class="chip">Dining</span><span class="chip">Guided Tours</span><span class="chip">Photography</span>
                 </div>
-                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)">
-                    <img src="assets/tt/four.jpeg" loading="lazy" alt="Safari">
-                    <div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div>
-                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="interiorPage" class="details-page" data-lenis-prevent>
+        <div class="details-appbar">
+            <button class="back-btn" onclick="closePage('interiorPage')"><i class="fas fa-arrow-left"></i></button>
+            <span class="details-title">Bespoke Interior Design</span>
+        </div>
+        <div class="details-content">
+            <p class="detail-anim-item" style="text-align: center; font-size: 18px; color: rgba(17, 42, 70, 0.8); margin-bottom: 30px;">
+                Transforming spaces into beautiful, functional, and personalized environments.
+            </p>
+            <h3 class="detail-anim-item" style="font-size: 30px; font-weight: bold; margin-bottom: 10px;">Residential Portfolio</h3>
+            <div class="gallery-grid">
+                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)"><img src="assets/is/residential/two.jpg" loading="lazy"><div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div></div>
+                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)"><img src="assets/is/residential/one.jpg" loading="lazy"><div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div></div>
+                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)"><img src="assets/is/residential/three.jpg" loading="lazy"><div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div></div>
+                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)"><img src="assets/is/residential/four.jpg" loading="lazy"><div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div></div>
+                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)"><img src="assets/is/residential/five.jpg" loading="lazy"><div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div></div>
+            </div>
+            <br>
+            <h3 class="detail-anim-item" style="font-size: 30px; font-weight: bold; margin-bottom: 10px;">Commercial Portfolio</h3>
+            <div class="gallery-grid">
+                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)"><img src="assets/is/commercial/two.jpeg" loading="lazy"><div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div></div>
+                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)"><img src="assets/is/commercial/three.jpeg" loading="lazy"><div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div></div>
+                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)"><img src="assets/is/commercial/four.jpeg" loading="lazy"><div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="coffeePage" class="details-page" data-lenis-prevent>
+        <div class="details-appbar">
+            <button class="back-btn" onclick="closePage('coffeePage')"><i class="fas fa-arrow-left"></i></button>
+            <span class="details-title">Premium Coffee</span>
+        </div>
+        <div class="details-content">
+            <p class="detail-anim-item" style="text-align: center; font-size: 18px; color: rgba(17, 42, 70, 0.8); margin-bottom: 30px;">
+                Dedicated to delivering rich flavors, freshness, and a truly satisfying coffee experience.
+            </p>
+            <div class="gallery-grid">
+                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)"><img src="assets/coffee/two.jpeg" loading="lazy"><div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div></div>
+                <div class="gallery-item detail-anim-item" onclick="openLightbox(this)"><img src="assets/coffee/one.jpeg" loading="lazy"><div class="rotate-btn" onclick="rotateImage(event, this)"><i class="fas fa-redo"></i></div></div>
             </div>
         </div>
     </div>
@@ -821,9 +879,7 @@
         requestAnimationFrame(raf);
 
         lenis.on('scroll', ScrollTrigger.update);
-        gsap.ticker.add((time) => {
-            lenis.raf(time * 1000);
-        });
+        gsap.ticker.add((time) => { lenis.raf(time * 1000); });
         gsap.ticker.lagSmoothing(0);
 
         function startPreloader() {
@@ -857,60 +913,77 @@
                 const bg = section.querySelector('.parallax-bg');
                 gsap.to(bg, { yPercent: 10, scale: 1.05, ease: "none", scrollTrigger: { trigger: section, start: "top bottom", end: "bottom top", scrub: 1 } });
             });
+
             gsap.utils.toArray('.content-box').forEach(box => {
                 gsap.to(box, { scrollTrigger: { trigger: box.parentElement, start: "top 60%", toggleActions: "play none none reverse" }, opacity: 1, y: 0, duration: 1.2 });
             });
+
             gsap.utils.toArray('.gsap-reveal').forEach((elem) => {
                 gsap.to(elem, { scrollTrigger: { trigger: elem, start: "top 85%", toggleActions: "play none none reverse" }, opacity: 1, y: 0, duration: 1 });
             });
+
             gsap.to(".contact-item", { scrollTrigger: { trigger: ".contact-section", start: "top 70%" }, opacity: 1, y: 0, stagger: 0.2, duration: 0.8 });
             gsap.to(".social-icon", { scrollTrigger: { trigger: ".social-wrap", start: "top 90%" }, opacity: 1, scale: 1, stagger: 0.1, duration: 0.6 });
         }
 
-        function scrollToSection(id) { lenis.scrollTo("#" + id, { offset: -60, duration: 1.2 }); }
-        function toggleDrawer() {
-            const d = document.getElementById('mobileDrawer');
-            const o = document.querySelector('.drawer-overlay');
-            d.classList.toggle('open');
-            o.classList.toggle('open');
+        function scrollToSection(id) {
+            lenis.scrollTo("#" + id, { offset: -60, duration: 1.2 });
         }
-        function drawerNavigate(id) { toggleDrawer(); scrollToSection(id); }
+
+        function toggleDrawer() {
+            const drawer = document.getElementById('mobileDrawer');
+            const overlay = document.querySelector('.drawer-overlay');
+            drawer.classList.toggle('open');
+            overlay.classList.toggle('open');
+        }
+
+        function drawerNavigate(id) {
+            toggleDrawer();
+            scrollToSection(id);
+        }
 
         function openPage(pageId) {
-            const p = document.getElementById(pageId);
-            p.style.display = 'block';
+            const page = document.getElementById(pageId);
+            page.style.display = 'block';
             lenis.stop();
-            gsap.to(p, { yPercent: -100, duration: 0.8, ease: "power4.inOut", onComplete: () => { animatePageContent(p); } });
+            gsap.to(page, { yPercent: -100, duration: 0.8, ease: "power4.inOut", onComplete: () => { animatePageContent(page); } });
         }
-        function animatePageContent(page) {
-            gsap.to(page.querySelectorAll('.detail-anim-item'), { opacity: 1, y: 0, stagger: 0.05, duration: 0.6 });
+
+        function animatePageContent(pageContext) {
+            const items = pageContext.querySelectorAll('.detail-anim-item');
+            gsap.to(items, { opacity: 1, y: 0, stagger: 0.05, duration: 0.6, delay: 0.1 });
         }
+
         function closePage(pageId) {
-            const p = document.getElementById(pageId);
+            const page = document.getElementById(pageId);
             lenis.start();
-            gsap.to(p, { yPercent: 0, duration: 0.6, ease: "power4.in", onComplete: () => { p.style.display = 'none'; } });
+            gsap.to(page, { yPercent: 0, duration: 0.6, ease: "power4.in", onComplete: () => { page.style.display = 'none'; } });
         }
-        function rotateImage(e, b) {
-            e.stopPropagation();
-            const i = b.parentElement.querySelector('img');
-            let r = (parseInt(i.getAttribute('data-rotation') || 0) + 90);
-            gsap.to(i, { rotation: r, duration: 0.5 });
-            i.setAttribute('data-rotation', r);
+
+        function rotateImage(event, btnElement) {
+            event.stopPropagation();
+            const img = btnElement.parentElement.querySelector('img');
+            let currentRot = parseInt(img.getAttribute('data-rotation') || 0) + 90;
+            gsap.to(img, { rotation: currentRot, duration: 0.5 });
+            img.setAttribute('data-rotation', currentRot);
         }
-        function openLightbox(e) {
-            const i = e.querySelector('img');
-            const lb = document.getElementById('lightbox'), lbi = document.getElementById('lightbox-img');
-            lbi.src = i.src;
-            lb.style.display = 'flex';
+
+        function openLightbox(element) {
+            const imgInGrid = element.querySelector('img');
+            const lightbox = document.getElementById('lightbox');
+            const lbImg = document.getElementById('lightbox-img');
+            lbImg.src = imgInGrid.src;
+            lightbox.style.display = 'flex';
             lenis.stop();
-            gsap.to(lb, { opacity: 1, duration: 0.3 });
-            gsap.fromTo(lbi, { scale: 0.8, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.4 });
+            gsap.set(lbImg, { rotation: imgInGrid.getAttribute('data-rotation') || 0, scale: 0.8, opacity: 0 });
+            gsap.to(lightbox, { opacity: 1, duration: 0.3 });
+            gsap.to(lbImg, { scale: 1, opacity: 1, duration: 0.4 });
         }
+
         function closeLightbox() {
             lenis.start();
             gsap.to(document.getElementById('lightbox'), { opacity: 0, duration: 0.3, onComplete: () => { document.getElementById('lightbox').style.display = 'none'; } });
         }
     </script>
 </body>
-
 </html>
